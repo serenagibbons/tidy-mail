@@ -1,0 +1,34 @@
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\client_id.json
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Tidy Mail.exe.config
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Tidy Mail.exe
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Tidy Mail.pdb
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Auth.dll
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Auth.PlatformServices.dll
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Core.dll
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.dll
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Gmail.v1.dll
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.PlatformServices.dll
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Newtonsoft.Json.dll
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.pdb
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.xml
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Auth.pdb
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Auth.xml
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Core.pdb
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Core.xml
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Gmail.v1.pdb
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Google.Apis.Gmail.v1.xml
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\bin\Debug\Newtonsoft.Json.xml
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail.csprojAssemblyReference.cache
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\MainWindow.g.cs
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\App.g.cs
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail_Content.g.cs
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail_MarkupCompile.cache
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail_MarkupCompile.lref
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\MainWindow.baml
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail.g.resources
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy_Mail.Properties.Resources.resources
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail.csproj.GenerateResource.cache
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail.csproj.CoreCompileInputs.cache
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail.csproj.CopyComplete
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail.exe
+C:\Users\seren\source\repos\Tidy Mail\Tidy Mail\obj\Debug\Tidy Mail.pdb

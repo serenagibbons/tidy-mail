@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tidy_Mail"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Tidy Mail" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="EmailCount" HorizontalAlignment="Left" Margin="5"/>
+        <Button Grid.Row="0" Content ="Delete" 
+                HorizontalAlignment="Right" Margin="5" Width="120"/>
+        <Button Grid.Row="0" Content ="Refresh"
+                HorizontalAlignment="Right" Margin="5,5,140,5" Width="120" Click="RefreshEmails"/>
+        <ListView Grid.Row="1" x:Name="EmailListView">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5">
+                        <TextBlock Text="{Binding Id}"/>
+                        <TextBlock Text="{Binding Snippet}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
     </Grid>
 </Window>

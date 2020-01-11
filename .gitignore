@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Tidy Mail/client_id.json
+/Tidy Mail/bin/Debug/client_id.json
