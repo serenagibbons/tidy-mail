@@ -5,18 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tidy_Mail"
         mc:Ignorable="d"
-        Title="Tidy Mail" Height="450" Width="800">
+        Title="Tidy Mail" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock x:Name="EmailCount" HorizontalAlignment="Left" Margin="5"/>
+        <TextBox Grid.Row="0" Margin="5" Width="200" HorizontalAlignment="Left"/>
+        <Button Grid.Row="0" Content ="Search" 
+                HorizontalAlignment="Left" Margin="210, 5" Width="100"/>
         <Button Grid.Row="0" Content ="Delete" 
-                HorizontalAlignment="Right" Margin="5" Width="120"/>
+                HorizontalAlignment="Right" Margin="5" Width="100"/>
         <Button Grid.Row="0" Content ="Refresh"
-                HorizontalAlignment="Right" Margin="5,5,140,5" Width="120" Click="RefreshEmails"/>
-        <ListView Grid.Row="1" x:Name="EmailListView">
+                HorizontalAlignment="Right" Margin="5,5,110,5" Width="100" Click="RefreshEmails"/>
+        <TextBlock Grid.Row="1" x:Name="EmailCount" HorizontalAlignment="Left" Margin="5"/>
+        <ListView Grid.Row="2" x:Name="EmailListView">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5">

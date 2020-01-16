@@ -37,6 +37,12 @@ namespace Tidy_Mail
             GetCredentials();
         }
 
+        // load emails into listview when window is first loaded
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            RefreshEmails(sender, e);
+        }
+
         // open a web page to prompt for user authorization
         public async void GetCredentials()
         {
@@ -57,9 +63,9 @@ namespace Tidy_Mail
                 ApplicationName = AppName,
             });
 
-            /*UsersResource.MessagesResource.ListRequest request =
-                service.Users.Messages.List("me");
-            var messages = request.Execute().Messages;*/
+            //UsersResource.MessagesResource.ListRequest request =
+              //  service.Users.Messages.List("me");
+            //var messages = request.Execute().Messages;
 
             List<Message> result = ListMessages(service);
 
@@ -79,7 +85,7 @@ namespace Tidy_Mail
 
             // update number of emails
             String numEmails = (result.Count).ToString("#,##0");
-            EmailCount.Text = "Unread Emails " + numEmails;
+            EmailCount.Text = numEmails + " results";
         }
 
         // <summary>
@@ -93,8 +99,8 @@ namespace Tidy_Mail
             request.Q = "is:unread";
             request.MaxResults = 200;
             
-            //do
-            //{
+            do
+            {
                 try
                 {
                     ListMessagesResponse response = request.Execute();
@@ -105,9 +111,10 @@ namespace Tidy_Mail
                 {
                     Console.WriteLine("An error occurred: " + e.Message);
                 }
-            //} while (!String.IsNullOrEmpty(request.PageToken));
+            } while (!String.IsNullOrEmpty(request.PageToken));
             
             return result;
         }
+
     }
 }
