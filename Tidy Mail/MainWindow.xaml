@@ -16,7 +16,7 @@
         <Button Grid.Row="0" Content ="Search" 
                 HorizontalAlignment="Left" Margin="210,5,0,0" Width="100" Height="20" VerticalAlignment="Top" Click="SearchEmails"/>
         <Button Grid.Row="0" Content ="Delete" 
-                HorizontalAlignment="Right" Margin="5" Width="100"/>
+                HorizontalAlignment="Right" Margin="5" Width="100" Click="DeleteEmails"/>
         <Button Grid.Row="0" Content ="Refresh"
                 HorizontalAlignment="Right" Margin="5,5,110,5" Width="100" Click="RefreshEmails"/>
         <TextBlock Grid.Row="1" x:Name="EmailCount" HorizontalAlignment="Left" Margin="5"/>
@@ -47,12 +47,12 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Border x:Name="DownloadBorder" Grid.Row="0" Grid.RowSpan="3" 
+        <Border x:Name="BusyBorder" Grid.Row="0" Grid.RowSpan="3" 
                 Background="#40000000" Visibility="Collapsed">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock x:Name="OperationText"/>
                 <ProgressBar x:Name="ProgressBar" Margin="0,5" Height="5"/>
-                <TextBlock x:Name="DownloadProgress"  HorizontalAlignment="Center"/>
+                <TextBlock x:Name="OperationProgress"  HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
     </Grid>

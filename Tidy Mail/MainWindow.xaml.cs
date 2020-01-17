@@ -33,6 +33,9 @@ namespace Tidy_Mail
         private UserCredential credential;
         const string AppName = "Tidy Mail";
 
+        int maxResults = 0;
+        int messageCount = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -75,8 +78,7 @@ namespace Tidy_Mail
             IList<Message> messages = null;
             var emailMessages = new List<Email>();
             OperationText.Text = "downloading messages";
-            DownloadBorder.Visibility = Visibility.Visible;
-            int maxResults = 0;
+            BusyBorder.Visibility = Visibility.Visible;
 
             await Task.Run(async () =>
             {
@@ -91,17 +93,18 @@ namespace Tidy_Mail
                 messages = ListMessages(service, query);
 
                 // limit app to show only first 500 results
-                if (messages.Count > 500)
+                messageCount = messages.Count;
+                if (messageCount > 500)
                 {
                     maxResults = 500;
                 }
                 else
                 {
-                    maxResults = messages.Count;
+                    maxResults = messageCount;
                 }
                 // set progress bar to amound of email results in UI thread
                 await Dispatcher.InvokeAsync(() =>
-                    ProgressBar.Maximum = maxResults);
+                    ProgressBar.Maximum = maxResults, System.Windows.Threading.DispatcherPriority.Normal);
 
                 for (int index = 0; index < maxResults; index++)
                 {
@@ -134,13 +137,13 @@ namespace Tidy_Mail
                             ProgressBar.Value = index1;
                             if (maxResults < messages.Count)
                             {
-                                DownloadProgress.Text = $"{index1} of first {maxResults}";
+                                OperationProgress.Text = $"{index1} of first {maxResults}";
                             }
                             else
                             {
-                                DownloadProgress.Text = $"{index1} of {maxResults}";
+                                OperationProgress.Text = $"{index1} of {maxResults}";
                             }
-                        });
+                        }, System.Windows.Threading.DispatcherPriority.Normal);
                     }
                     catch (NullReferenceException)
                     {
@@ -149,7 +152,7 @@ namespace Tidy_Mail
                 }
             });
 
-            DownloadBorder.Visibility = Visibility.Collapsed;
+            BusyBorder.Visibility = Visibility.Collapsed;
             EmailListView.ItemsSource = new ObservableCollection<Email>(
                 emailMessages);
             if (maxResults > 0)
@@ -195,6 +198,47 @@ namespace Tidy_Mail
         {
             String query = searchBox.Text;
             GetEmails(query);
+        }
+
+        // delete selected emails
+        private async void DeleteEmails(object sender, RoutedEventArgs e)
+        {
+            var messages = (ObservableCollection<Email>)EmailListView.ItemsSource;
+            var messagesToDelete = messages.Where(m => m.IsSelected).ToList();
+            if (!messagesToDelete.Any())
+            {
+                MessageBoxResult messageBox = MessageBox.Show("There are no selected messages to delete");
+                return;
+            }
+
+            var service = new GmailService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = AppName,
+            });
+            OperationText.Text = "deleting messages";
+            ProgressBar.Maximum = messagesToDelete.Count;
+            OperationProgress.Text = "";
+            BusyBorder.Visibility = Visibility.Visible;
+
+            await Task.Run(async () =>
+            {
+                for (int index = 0; index < messagesToDelete.Count; index++)
+                {
+                    var message = messagesToDelete[index];
+                    var response = service.Users.Messages.Trash("me", message.Id);
+                    response.Execute();
+                    var index1 = index + 1;
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        ProgressBar.Value = index1;
+                        OperationText.Text = $"{index1} of {messagesToDelete.Count}";
+                        messages.Remove(message);
+                        EmailCount.Text = $"1 - {--maxResults} of {--messageCount} messages.";
+                    }, System.Windows.Threading.DispatcherPriority.Normal);
+                }
+            });
+            BusyBorder.Visibility = Visibility.Collapsed;
         }
     }
 }
