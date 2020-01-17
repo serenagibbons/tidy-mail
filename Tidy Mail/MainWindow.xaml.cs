@@ -57,7 +57,14 @@ namespace Tidy_Mail
         }
 
         // load emails from Gmail and update number of emails
-        private async void RefreshEmails(object sender, RoutedEventArgs e)
+        private void RefreshEmails(object sender, RoutedEventArgs e)
+        {
+            String query = "in:inbox is:unread";
+            GetEmails(query);
+        }
+
+
+        private async void GetEmails(String searchQuery)
         {
             var service = new GmailService(new BaseClientService.Initializer()
             {
@@ -79,12 +86,14 @@ namespace Tidy_Mail
                 //request.MaxResults = 500;
 
                 //messages = request.Execute().Messages;*/
-                messages = ListMessages(service);
+
+                String query = searchQuery;
+                messages = ListMessages(service, query);
 
                 // limit app to show only first 500 results
                 if (messages.Count > 500)
                 {
-                    maxResults = 500;   
+                    maxResults = 500;
                 }
                 else
                 {
@@ -150,19 +159,19 @@ namespace Tidy_Mail
             else
             {
                 EmailCount.Text = $"{messages.Count} messages.";
-
             }
         }
+
 
         // <summary>
         /// List all Messages of the user's mailbox matching the query.
         /// </summary>
         /// <param name="service">Gmail API service instance.</param>
-        public static List<Message> ListMessages(GmailService service)
+        public static List<Message> ListMessages(GmailService service, String query)
         {
             List<Message> result = new List<Message>();
             UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List("me");
-            request.Q = "in:inbox is:unread";
+            request.Q = query;
             
             do
             {
@@ -181,5 +190,11 @@ namespace Tidy_Mail
             return result;
         }
 
+        // search for emails according to input criteria and display results
+        private void SearchEmails(object sender, RoutedEventArgs e)
+        {
+            String query = searchBox.Text;
+            GetEmails(query);
+        }
     }
 }

@@ -12,9 +12,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0" Margin="5" Width="200" HorizontalAlignment="Left"/>
+        <TextBox x:Name="searchBox" Grid.Row="0" Margin="5" Width="200" HorizontalAlignment="Left"/>
         <Button Grid.Row="0" Content ="Search" 
-                HorizontalAlignment="Left" Margin="210, 5" Width="100"/>
+                HorizontalAlignment="Left" Margin="210,5,0,0" Width="100" Height="20" VerticalAlignment="Top" Click="SearchEmails"/>
         <Button Grid.Row="0" Content ="Delete" 
                 HorizontalAlignment="Right" Margin="5" Width="100"/>
         <Button Grid.Row="0" Content ="Refresh"
