@@ -5,8 +5,10 @@ using Google.Apis.Services;
 using Google.Apis.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,7 +57,7 @@ namespace Tidy_Mail
         }
 
         // load emails from Gmail and update number of emails
-        private void RefreshEmails (object sender, RoutedEventArgs e)
+        private async void RefreshEmails(object sender, RoutedEventArgs e)
         {
             var service = new GmailService(new BaseClientService.Initializer()
             {
@@ -63,29 +65,93 @@ namespace Tidy_Mail
                 ApplicationName = AppName,
             });
 
-            //UsersResource.MessagesResource.ListRequest request =
-              //  service.Users.Messages.List("me");
-            //var messages = request.Execute().Messages;
+            IList<Message> messages = null;
+            var emailMessages = new List<Email>();
+            OperationText.Text = "downloading messages";
+            DownloadBorder.Visibility = Visibility.Visible;
+            int maxResults = 0;
 
-            List<Message> result = ListMessages(service);
-
-            for (int index = 0; index < result.Count; ++index)
+            await Task.Run(async () =>
             {
-                var message = result[index];
-                var getRequest = service.Users.Messages.Get("me", message.Id);
-                getRequest.Format = UsersResource.MessagesResource.GetRequest.FormatEnum.Metadata;
-                getRequest.MetadataHeaders = new Repeatable<string>(
-                    new[] { "Subject", "Date", "From" });
-                result[index] = getRequest.Execute();
+                /*UsersResource.MessagesResource.ListRequest request =
+                service.Users.Messages.List("me");
+                request.Q = "in:inbox is:unread";
+                //request.MaxResults = 500;
+
+                //messages = request.Execute().Messages;*/
+                messages = ListMessages(service);
+
+                // limit app to show only first 500 results
+                if (messages.Count > 500)
+                {
+                    maxResults = 500;   
+                }
+                else
+                {
+                    maxResults = messages.Count;
+                }
+                // set progress bar to amound of email results in UI thread
+                await Dispatcher.InvokeAsync(() =>
+                    ProgressBar.Maximum = maxResults);
+
+                for (int index = 0; index < maxResults; index++)
+                {
+                    try
+                    {
+                        var message = messages[index];
+                        var getRequest = service.Users.Messages.Get("me", message.Id);
+                        getRequest.Format =
+                            UsersResource.MessagesResource.GetRequest.FormatEnum.Metadata;
+                        getRequest.MetadataHeaders = new Repeatable<string>(
+                            new[] { "Subject", "Date", "From" });
+                        messages[index] = getRequest.Execute();
+
+                        emailMessages.Add(new Email()
+                        {
+                            Id = messages[index].Id,
+                            Snippet = WebUtility.HtmlDecode(messages[index].Snippet),
+                            From = messages[index].Payload.Headers.FirstOrDefault(h =>
+                                h.Name == "From").Value,
+                            Subject = messages[index].Payload.Headers.FirstOrDefault(h =>
+                                h.Name == "Subject").Value,
+                            Date = messages[index].Payload.Headers.FirstOrDefault(h =>
+                                h.Name == "Date").Value,
+                        });
+
+                        // update progress bar and download progress text in UI thread
+                        var index1 = index + 1;
+                        await Dispatcher.InvokeAsync(() =>
+                        {
+                            ProgressBar.Value = index1;
+                            if (maxResults < messages.Count)
+                            {
+                                DownloadProgress.Text = $"{index1} of first {maxResults}";
+                            }
+                            else
+                            {
+                                DownloadProgress.Text = $"{index1} of {maxResults}";
+                            }
+                        });
+                    }
+                    catch (NullReferenceException)
+                    {
+                        // do nothing
+                    }
+                }
+            });
+
+            DownloadBorder.Visibility = Visibility.Collapsed;
+            EmailListView.ItemsSource = new ObservableCollection<Email>(
+                emailMessages);
+            if (maxResults > 0)
+            {
+                EmailCount.Text = $"1 - {maxResults} of {messages.Count} messages.";
+            }
+            else
+            {
+                EmailCount.Text = $"{messages.Count} messages.";
 
             }
-
-            // load emails into listview
-            EmailListView.ItemsSource = result;
-
-            // update number of emails
-            String numEmails = (result.Count).ToString("#,##0");
-            EmailCount.Text = numEmails + " results";
         }
 
         // <summary>
@@ -96,8 +162,7 @@ namespace Tidy_Mail
         {
             List<Message> result = new List<Message>();
             UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List("me");
-            request.Q = "is:unread";
-            request.MaxResults = 200;
+            request.Q = "in:inbox is:unread";
             
             do
             {
@@ -105,7 +170,7 @@ namespace Tidy_Mail
                 {
                     ListMessagesResponse response = request.Execute();
                     result.AddRange(response.Messages);
-                    //request.PageToken = response.NextPageToken;
+                    request.PageToken = response.NextPageToken;
                 }
                 catch (Exception e)
                 {

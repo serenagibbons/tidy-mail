@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tidy_Mail"
         mc:Ignorable="d"
-        Title="Tidy Mail" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="Tidy Mail" Height="600" Width="1000" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,13 +23,37 @@
         <ListView Grid.Row="2" x:Name="EmailListView">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="5">
-                        <TextBlock Text="{Binding Id}"/>
-                        <TextBlock Text="{Binding Snippet}"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                  IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="5"/>
+                        <StackPanel Grid.Column="1" Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding From}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Date}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Subject, StringFormat='{}{0} '}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Snippet}"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
+        <Border x:Name="DownloadBorder" Grid.Row="0" Grid.RowSpan="3" 
+                Background="#40000000" Visibility="Collapsed">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock x:Name="OperationText"/>
+                <ProgressBar x:Name="ProgressBar" Margin="0,5" Height="5"/>
+                <TextBlock x:Name="DownloadProgress"  HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
