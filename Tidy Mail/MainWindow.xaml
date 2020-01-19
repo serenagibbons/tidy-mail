@@ -19,7 +19,9 @@
                 HorizontalAlignment="Right" Margin="5" Width="100" Click="DeleteEmails"/>
         <Button Grid.Row="0" Content ="Refresh"
                 HorizontalAlignment="Right" Margin="5,5,110,5" Width="100" Click="RefreshEmails"/>
-        <TextBlock Grid.Row="1" x:Name="EmailCount" HorizontalAlignment="Left" Margin="5"/>
+        <Button x:Name="selectAllButton" Grid.Row="1" Content="Select All" Width="110"
+                HorizontalAlignment="Left" Margin="5" Click="SelectAllEmails"/>
+        <TextBlock Grid.Row="1" x:Name="EmailCount" HorizontalAlignment="Right" Margin="5"/>
         <ListView Grid.Row="2" x:Name="EmailListView">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -28,7 +30,7 @@
                             <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox HorizontalAlignment="Left" VerticalAlignment="Center" 
+                        <CheckBox x:Name="checkbox" HorizontalAlignment="Left" VerticalAlignment="Center" 
                                   IsChecked="{Binding IsSelected, Mode=TwoWay}" Margin="5"/>
                         <StackPanel Grid.Column="1" Margin="5">
                             <StackPanel Orientation="Horizontal">

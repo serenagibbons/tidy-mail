@@ -33,6 +33,8 @@ namespace Tidy_Mail
         private UserCredential credential;
         const string AppName = "Tidy Mail";
 
+        //ObservableCollection<Email> emailMessages = new ObservableCollection<Email>();
+
         int maxResults = 0;
         int messageCount = 0;
 
@@ -66,7 +68,6 @@ namespace Tidy_Mail
             GetEmails(query);
         }
 
-
         private async void GetEmails(String searchQuery)
         {
             var service = new GmailService(new BaseClientService.Initializer()
@@ -76,7 +77,7 @@ namespace Tidy_Mail
             });
 
             IList<Message> messages = null;
-            var emailMessages = new List<Email>();
+            var emailMessages = new ObservableCollection<Email>();
             OperationText.Text = "downloading messages";
             BusyBorder.Visibility = Visibility.Visible;
 
@@ -94,9 +95,9 @@ namespace Tidy_Mail
 
                 // limit app to show only first 500 results
                 messageCount = messages.Count;
-                if (messageCount > 500)
+                if (messageCount > 100)
                 {
-                    maxResults = 500;
+                    maxResults = 100;
                 }
                 else
                 {
@@ -153,8 +154,8 @@ namespace Tidy_Mail
             });
 
             BusyBorder.Visibility = Visibility.Collapsed;
-            EmailListView.ItemsSource = new ObservableCollection<Email>(
-                emailMessages);
+            EmailListView.ItemsSource = new ObservableCollection<Email>(emailMessages);
+            //EmailListView.ItemsSource = emailMessages;
             if (maxResults > 0)
             {
                 EmailCount.Text = $"1 - {maxResults} of {messages.Count} messages.";
@@ -239,6 +240,32 @@ namespace Tidy_Mail
                 }
             });
             BusyBorder.Visibility = Visibility.Collapsed;
+        }
+
+        private void SelectAllEmails(object sender, RoutedEventArgs e)
+        {
+            var messages = (ObservableCollection<Email>)EmailListView.ItemsSource;
+
+            if ((string)selectAllButton.Content == "Select All")
+            {
+                // select all messages
+                foreach(var a in messages)
+                {
+                    a.IsSelected = true;
+                }
+
+                selectAllButton.Content = "Unselect All";
+            }
+            else
+            {
+                // unselect all messages 
+                foreach (var a in messages)
+                {
+                    a.IsSelected = false;
+                }
+
+                selectAllButton.Content = "Select All";
+            }
         }
     }
 }
