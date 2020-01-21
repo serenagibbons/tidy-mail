@@ -50,11 +50,10 @@
             </ListView.ItemTemplate>
         </ListView>
         <Border x:Name="BusyBorder" Grid.Row="0" Grid.RowSpan="3" 
-                Background="#40000000" Visibility="Collapsed">
+                Background="#40000000" Visibility="Visible">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock x:Name="OperationText"/>
-                <ProgressBar x:Name="ProgressBar" Margin="0,5" Height="5"/>
-                <TextBlock x:Name="OperationProgress"  HorizontalAlignment="Center"/>
+                <TextBlock x:Name="OperationText" HorizontalAlignment="Center"/>
+                <ProgressBar x:Name="ProgressBar" Margin="0,5" Height="7"/>
             </StackPanel>
         </Border>
     </Grid>

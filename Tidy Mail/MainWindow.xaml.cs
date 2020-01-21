@@ -9,18 +9,10 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Tidy_Mail
 {
@@ -61,13 +53,14 @@ namespace Tidy_Mail
             }
         }
 
-        // load emails from Gmail and update number of emails
+        // load unread emails from Gmail inbox
         private void RefreshEmails(object sender, RoutedEventArgs e)
         {
             String query = "in:inbox is:unread";
             GetEmails(query);
         }
 
+        // load emails from Gmail according to search query
         private async void GetEmails(String searchQuery)
         {
             var service = new GmailService(new BaseClientService.Initializer()
@@ -83,21 +76,14 @@ namespace Tidy_Mail
 
             await Task.Run(async () =>
             {
-                /*UsersResource.MessagesResource.ListRequest request =
-                service.Users.Messages.List("me");
-                request.Q = "in:inbox is:unread";
-                //request.MaxResults = 500;
-
-                //messages = request.Execute().Messages;*/
-
                 String query = searchQuery;
                 messages = ListMessages(service, query);
 
-                // limit app to show only first 500 results
+                // limit app to show only first 1000 results
                 messageCount = messages.Count;
-                if (messageCount > 100)
+                if (messageCount > 1000)
                 {
-                    maxResults = 100;
+                    maxResults = 1000;
                 }
                 else
                 {
@@ -138,11 +124,11 @@ namespace Tidy_Mail
                             ProgressBar.Value = index1;
                             if (maxResults < messages.Count)
                             {
-                                OperationProgress.Text = $"{index1} of first {maxResults}";
+                                OperationText.Text = $"dowloading {index1} of first {maxResults} messages";
                             }
                             else
                             {
-                                OperationProgress.Text = $"{index1} of {maxResults}";
+                                OperationText.Text = $"downloading {index1} of {maxResults} messages";
                             }
                         }, System.Windows.Threading.DispatcherPriority.Normal);
                     }
@@ -155,7 +141,7 @@ namespace Tidy_Mail
 
             BusyBorder.Visibility = Visibility.Collapsed;
             EmailListView.ItemsSource = new ObservableCollection<Email>(emailMessages);
-            //EmailListView.ItemsSource = emailMessages;
+
             if (maxResults > 0)
             {
                 EmailCount.Text = $"1 - {maxResults} of {messages.Count} messages.";
@@ -165,7 +151,6 @@ namespace Tidy_Mail
                 EmailCount.Text = $"{messages.Count} messages.";
             }
         }
-
 
         // <summary>
         /// List all Messages of the user's mailbox matching the query.
@@ -208,7 +193,7 @@ namespace Tidy_Mail
             var messagesToDelete = messages.Where(m => m.IsSelected).ToList();
             if (!messagesToDelete.Any())
             {
-                MessageBoxResult messageBox = MessageBox.Show("There are no selected messages to delete");
+                MessageBox.Show("There are no selected messages to delete");
                 return;
             }
 
@@ -219,7 +204,18 @@ namespace Tidy_Mail
             });
             OperationText.Text = "deleting messages";
             ProgressBar.Maximum = messagesToDelete.Count;
-            OperationProgress.Text = "";
+            //OperationProgress.Text = "";
+
+            // prompt user for confirmation to delete selected emails
+            MessageBoxResult messageBoxResult = MessageBox.Show($"Are you sure you would you like to delete {messagesToDelete.Count} messages?", "Delete Messages", MessageBoxButton.YesNo);
+            switch(messageBoxResult)
+            {
+                case MessageBoxResult.Yes:
+                    break;
+                case MessageBoxResult.No:
+                    return;
+            }
+
             BusyBorder.Visibility = Visibility.Visible;
 
             await Task.Run(async () =>
@@ -233,15 +229,29 @@ namespace Tidy_Mail
                     await Dispatcher.InvokeAsync(() =>
                     {
                         ProgressBar.Value = index1;
-                        OperationText.Text = $"{index1} of {messagesToDelete.Count}";
+                        OperationText.Text = $"deleting {index1} of {messagesToDelete.Count} messages";
                         messages.Remove(message);
-                        EmailCount.Text = $"1 - {--maxResults} of {--messageCount} messages.";
+
+                        if (EmailListView.Items.Count == 0)
+                        {
+                            // if all emails were deleted
+                            EmailCount.Text = $"0 of {--messageCount} messages.";
+                        }
+                        else
+                        {
+                            EmailCount.Text = $"1 - {--maxResults} of {--messageCount} messages.";
+                        }
+                       
                     }, System.Windows.Threading.DispatcherPriority.Normal);
                 }
             });
             BusyBorder.Visibility = Visibility.Collapsed;
+
+            // change button text to select all
+            selectAllButton.Content = "Select All";
         }
 
+        // select or unselect all messages in listview
         private void SelectAllEmails(object sender, RoutedEventArgs e)
         {
             var messages = (ObservableCollection<Email>)EmailListView.ItemsSource;
@@ -253,7 +263,7 @@ namespace Tidy_Mail
                 {
                     a.IsSelected = true;
                 }
-
+                // change button text to unselect all
                 selectAllButton.Content = "Unselect All";
             }
             else
@@ -263,7 +273,7 @@ namespace Tidy_Mail
                 {
                     a.IsSelected = false;
                 }
-
+                // change button text to select all
                 selectAllButton.Content = "Select All";
             }
         }
