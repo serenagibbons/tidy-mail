@@ -217,7 +217,7 @@ namespace Tidy_Mail
             }
 
             BusyBorder.Visibility = Visibility.Visible;
-
+            
             await Task.Run(async () =>
             {
                 for (int index = 0; index < messagesToDelete.Count; index++)
@@ -249,6 +249,15 @@ namespace Tidy_Mail
 
             // change button text to select all
             selectAllButton.Content = "Select All";
+
+            if (messageCount > 0)
+            {
+                // retrieve any remaining messages
+                String query = searchBox.Text;
+                GetEmails(query);
+            }
+            // display message of number of messages deleted
+            MessageBox.Show($"{messagesToDelete.Count} messages deleted");
         }
 
         // select or unselect all messages in listview
