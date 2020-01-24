@@ -56,7 +56,13 @@ namespace Tidy_Mail
         // load unread emails from Gmail inbox
         private void RefreshEmails(object sender, RoutedEventArgs e)
         {
-            String query = "in:inbox is:unread";
+            // refresh to default query
+            string query = "in:inbox is:unread";
+            // if search box is not empty, set query to search box text
+            if (searchBox.Text != "")
+            {
+                query = searchBox.Text;
+            }
             GetEmails(query);
         }
 
